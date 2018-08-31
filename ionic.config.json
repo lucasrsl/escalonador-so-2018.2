@@ -1,0 +1,7 @@
+{
+  "name": "EscalonadorSO",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
