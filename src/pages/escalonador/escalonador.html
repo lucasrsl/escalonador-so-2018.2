@@ -1,0 +1,33 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Escalonador</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding no-bounce>
+  <ion-list>
+    <ion-item>
+      <ion-label  class="esc-label">Número de processadores: </ion-label>
+      <ion-input type="tel" value="" #Np placeholder="1 - 64" maxlength="2"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label  class="esc-label">Número de processos iniciais: </ion-label>
+        <ion-input type="tel" value="" #Pi  maxlength="3"></ion-input>
+      </ion-item>
+    <ion-item>
+        <ion-label>Escalonador: </ion-label>
+        <ion-select #S class="esc-select" interface="popover">
+            <ion-option value="sjf">Shortest Job First</ion-option>
+            <ion-option value="rr">Round Robin</ion-option>
+            <ion-option value="ltg">Least Time to Go</ion-option>
+        </ion-select>
+      </ion-item>
+  </ion-list>
+
+  <button ion-button block (click)="pushPage('S.value', Np.value, Pi.value)">Iniciar</button>
+
+
+</ion-content>
