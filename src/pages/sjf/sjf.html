@@ -10,12 +10,31 @@
 <ion-content padding>
   <ion-grid >
     <ion-row>
-      <ion-col class="col-pcors" col-6  *ngFor="let p of processors" (click) = "showAlert(k.name)">
-        <div class="kid-square">
-            <img class ="kid-img" src="{{k.img}}">
-            <label >{{k.name}}</label>
+      <ion-col class="col-processors" col-3  *ngFor="let p of processors" (click) = "showAlert(k.name)">
+        <label >{{p}}</label>
+        <div class="processor-square">
+            
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-list class="processes-list">
+    <ion-grid>
+      <ion-row  *ngFor="let p of process" class="item-processo">
+        <ion-col col-3>
+          {{p.id}}
+        </ion-col>
+        <ion-col col-3>
+          {{p.total}}
+        </ion-col>
+        <ion-col col-3>
+          {{p.left}}
+        </ion-col>
+        <ion-col col-3>
+          {{p.state}}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
 </ion-content>
