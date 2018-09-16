@@ -8,25 +8,26 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'escalonador.html',
 })
 export class EscalonadorPage {
-
+  data = {x:"", y:"", z:""}
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  pushPage(page, Np, Pi) {
-    if(page=='sjf'){
+  pushPage() {
+    console.log(this.data)
+    if(this.data.x==='sjf'){
       this.navCtrl.push('SjfPage', {
-        processors: Np,
-        processes: Pi
+        processors: this.data.y,
+        processes: this.data.z
       })
-    }else if(page=='rr'){
+    }else if(this.data.x==='rr'){
       this.navCtrl.push('RrPage', {
-        processors: Np,
-        processes: Pi
+        processors: this.data.y,
+        processes: this.data.z
       })
-    }else{
+    }else if(this.data.x==='ltg'){
       this.navCtrl.push('LtgPage', {
-        processors: Np,
-        processes: Pi
+        processors: this.data.y,
+        processes: this.data.z
       })
     }
   }
