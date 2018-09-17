@@ -20,11 +20,15 @@
           </ion-item>
         <ion-item>
             <ion-label>Escalonador: </ion-label>
-            <ion-select #S class="esc-select" name="escalonador" interface="popover" [(ngModel)]="data.x">
+            <ion-select #S class="esc-select" name="escalonador" interface="popover" [(ngModel)]="data.x" (ionChange)="onChange(S.value)">
                 <ion-option value="sjf">Shortest Job First</ion-option>
                 <ion-option value="rr">Round Robin</ion-option>
                 <ion-option value="ltg">Least Time to Go</ion-option>
             </ion-select>
+          </ion-item>
+          <ion-item *ngIf="visability">
+            <ion-label  class="esc-label">Quantum: </ion-label>
+            <ion-input type="tel" #Qt name="quantum" placeholder="2 - 20" maxlength="2" [(ngModel)]="data.w"></ion-input>
           </ion-item>
       </ion-list>
     

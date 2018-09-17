@@ -1,3 +1,14 @@
 page-rr {
-
+    .processor-square{
+        text-align: center;
+        border: solid;
+        border-color: black;
+        border-radius: 8px;
+    }
+    .processes-list{
+        ion-col{
+            font-size: 80%;
+            text-align: center;
+        }
+    }
 }
