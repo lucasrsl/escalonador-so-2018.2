@@ -14,19 +14,18 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'rr.html',
 })
 export class RrPage {
-  process: Array<{id: number, total: number, state: string, left: number, prior: number}> = []
-  processor: Array<{id: number, process: number, total: number, left: number}> = []
-  aptos: Array<{id: number, total: number, state: string, left: number, prior: number}> = []
-  quantum: number = 0
+  aptos: Array<{id: number, total: number, state: string, left: number}> = []
+  finalizados: Array<{id: number, total: number, state: string, left: number}> = []
+  processor: Array<{id: number, process: number, total: number, left: number, state: string}> = []
   lastId: number = 0
   turnaround: number = 0
+  quantum: number = 0
 
   constructor(public navCtrl: NavController, public navParams: NavParams) { 
-    this.quantum = navParams.get("quantum")
-    console.log(this.quantum)
     this.generateProcesses(navParams.get("processes"))
-    this.generateProcessors(navParams.get("processors"), this.aptos)
-    //this.escalonar(navParams.get("processors"))
+    this.generateProcessors(navParams.get("processors"))
+    this.quantum = navParams.get("quantum")
+    this.escalonar(navParams.get("processors"))
     
     
   }
@@ -37,69 +36,76 @@ export class RrPage {
     return Math.floor(Math.random()*(max-min))+min
   }
 
+  sortProcesses(){ // inserion sort
+    for (let i = 1; i < this.aptos.length; i++)
+    {
+        let key = this.aptos[i]
+        let j = i-1
+
+        while (j >= 0 && this.aptos[j].total > key.total)
+        {
+            this.aptos[j + 1] = this.aptos[j]
+            j = j - 1
+        }
+        this.aptos[j + 1] = key
+    }
+  }
+
   generateProcesses(processes) { // gera os processos e coloca eles na fila de aptos
     let total
     let state = 'pronto'
-    let prior
     for (let i = 0; i < processes; i++) {
       total = this.generateRandomNumber(4,20)
-      prior = this.generateRandomNumber(0,3)
-      this.process.push({id: this.lastId, total: total, state: state, left: total, prior: prior})
-      this.aptos.push({id: this.lastId, total: total, state: state, left: total, prior: prior})
+      this.aptos.push({id: this.lastId, total: total, state: state, left: total})
       this.lastId++
       this.turnaround = this.turnaround + total
     }
+    this.sortProcesses()
   }
 
-  generateProcessors(processors, processes){
+  generateProcessors(processors){
     let id = 0
     for (let i = 0; i < processors; i++) {
-      if(processes.length > id){
-        this.processor.push({id: id, process: processes[i].id, total: processes[i].total, left: processes[i].total})
-        this.aptos.splice(i, 1); // processo retirado da lista de aptos 
-        this.process[i].state = 'executando'
+      if(this.aptos.length > id){
+        this.processor.push({id: id, process: this.aptos[0].id, total: this.aptos[0].total, left: this.aptos[0].total, state: 'executando'}) // coloca próximo processo da lista no processador
+        this.aptos.splice(0, 1) // processo retirado da lista de aptos 
       }else{
-        this.processor.push({id: id, process: null, total: null, left: null}) // cria processador sem processo
+        this.processor.push({id: id, process: null, total: null, left: null, state: null}) // cria processador sem processo
       }
-      
       id++
     }
+    this.turnaround = this.turnaround / this.processor.length
   }
 
   escalonar(processors:number){
-    let counter = 0
-    let counter2 = 0
-    let intervalVar = setInterval(function(){ // cria thread de 1 segundo
-      for (let i = 1; i <= processors; i++) {
-        if(counter > this.turnaround){
-          clearInterval(intervalVar); // para a thread se chegou ao fim
-        }
-        console.log("chegou aqui 1")
-        if(counter2 == this.quantum){
-          counter2 = 0
-          this.process[this.processor[i].process].state = 'esperando' //
-          //this.aptos.splice(this.processor[i].process, 1) //processo retirado da fila de aptos
-          this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
-          this.processor[i].total = this.aptos[0].total
-          this.processor[i].left = this.aptos[0].left
-
-        }
+    let intervalVar = setInterval(() => { // cria thread de 1 segundo
+      for (let i = 0; i < processors; i++) {
         if(this.processor[i].left == 0){ //processo finalizado
-          console.log("chegou aqui 2")
-          this.process[this.processor[i].process].state = 'pronto' //status do processo volta a ser pronto
-          this.aptos.splice(this.processor[i].process, 1) //processo retirado da fila de aptos
-          this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
-          this.processor[i].total = this.aptos[0].total
-          this.processor[i].left = this.aptos[0].left
+          this.processor[i].state = 'pronto' //status do processo volta a ser pronto
+          this.finalizados.push({id: this.processor[i].process, total: this.processor[i].total, state: this.processor[i].state, left: this.processor[i].left})
+          if(this.aptos.length != 0){
+            this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
+            this.processor[i].total = this.aptos[0].total
+            this.processor[i].left = this.aptos[0].total
+            this.aptos.splice(0, 1)
+          }else{
+            this.processor[i].process = null //coloca próximo na fila de aptos para executar
+            this.processor[i].total = null
+            this.processor[i].left = null
+          }
+        }else if(this.processor[i].left == null){
+          if(this.aptos.length != 0){
+            this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
+            this.processor[i].total = this.aptos[0].total
+            this.processor[i].left = this.aptos[0].total
+            this.aptos.splice(0, 1)
+          }
         }else{
-          this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
-          this.process[this.processor[i].process].left = this.process[this.processor[i].process].left - 1
-          console.log("chegou aqui 4")
+          if(this.processor[i].left != null){
+            this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
+          }
         }
-      } 
-      counter++ 
-      counter2++      
+      }       
     },1000)
   }
-
 }

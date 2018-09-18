@@ -43,9 +43,11 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <button ion-button block (click)="generateProcesses(1)">Adicionar processo</button>
-  <ion-list class="processes-list">
-      <ion-item class="item-processo">
+  <button ion-button block (click)="generateProcesses(1)">Adicionar processo</button><br>
+
+  <h3>Aptos</h3>
+  <ion-list class="aptos-list">
+      <ion-item class="item-aptos">
           <ion-grid>
             <ion-row>
               <ion-col col-3>
@@ -61,29 +63,75 @@
                   Restante
                 </ion-col>
                 <ion-col col-3>
+                    <ion-icon name="cloud"></ion-icon>
                   Estado
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
-    <ion-item  *ngFor="let p of process" class="item-processo">
+    <ion-item  *ngFor="let a of aptos" class="item-aptos">
       <ion-grid>
         <ion-row>
           <ion-col col-3>
-              {{p.id}}
+              {{a.id}}
             </ion-col>
             <ion-col col-3>
-              {{p.total}}
+              {{a.total}}
             </ion-col>
             <ion-col col-3>
-              {{p.left}}
+              {{a.left}}
             </ion-col>
             <ion-col col-3>
-              {{p.state}}
+              {{a.state}}
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
-    
+  </ion-list><br>
+
+  <h3>Finalizados</h3>
+  <ion-list class="finalizados-list">
+    <ion-item class="item-finalizados">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-3>
+                <ion-icon name="planet"></ion-icon>
+                Id
+              </ion-col>
+              <ion-col col-3>
+                <ion-icon name="car"></ion-icon>
+                Total
+              </ion-col>
+              <ion-col col-3>
+                <ion-icon name="pizza"></ion-icon>
+                Restante
+              </ion-col>
+              <ion-col col-3>
+                  <ion-icon name="cloud"></ion-icon>
+                Estado
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+
+    <ion-item  *ngFor="let f of finalizados" class="item-finalizados">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-3>
+              {{f.id}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.total}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.left}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.state}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  
   </ion-list>
 </ion-content>
