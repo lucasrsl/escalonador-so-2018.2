@@ -12,11 +12,13 @@ page-sjf {
         }
     }
 
-    .item-aptos{
+    .item-aptos,
+    .item-finalizados{
+        text-align: center;
         font-size: 90%;
     }
 
-    .item-finalizados{
-        font-size: 90%;
+    .nomes-coluna{
+        font-weight: bold;
     }
 }

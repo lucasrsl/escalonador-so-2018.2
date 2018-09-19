@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the RrPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-rr',
@@ -18,7 +11,6 @@ export class RrPage {
   finalizados: Array<{id: number, total: number, state: string, left: number}> = []
   processor: Array<{id: number, process: number, total: number, left: number, state: string}> = []
   lastId: number = 0
-  turnaround: number = 0
   quantum: number = 0
 
   constructor(public navCtrl: NavController, public navParams: NavParams) { 
@@ -36,21 +28,6 @@ export class RrPage {
     return Math.floor(Math.random()*(max-min))+min
   }
 
-  sortProcesses(){ // inserion sort
-    for (let i = 1; i < this.aptos.length; i++)
-    {
-        let key = this.aptos[i]
-        let j = i-1
-
-        while (j >= 0 && this.aptos[j].total > key.total)
-        {
-            this.aptos[j + 1] = this.aptos[j]
-            j = j - 1
-        }
-        this.aptos[j + 1] = key
-    }
-  }
-
   generateProcesses(processes) { // gera os processos e coloca eles na fila de aptos
     let total
     let state = 'pronto'
@@ -58,9 +35,7 @@ export class RrPage {
       total = this.generateRandomNumber(4,20)
       this.aptos.push({id: this.lastId, total: total, state: state, left: total})
       this.lastId++
-      this.turnaround = this.turnaround + total
     }
-    this.sortProcesses()
   }
 
   generateProcessors(processors){
@@ -74,38 +49,58 @@ export class RrPage {
       }
       id++
     }
-    this.turnaround = this.turnaround / this.processor.length
   }
 
   escalonar(processors:number){
+    let counter = 0
     let intervalVar = setInterval(() => { // cria thread de 1 segundo
       for (let i = 0; i < processors; i++) {
-        if(this.processor[i].left == 0){ //processo finalizado
-          this.processor[i].state = 'pronto' //status do processo volta a ser pronto
-          this.finalizados.push({id: this.processor[i].process, total: this.processor[i].total, state: this.processor[i].state, left: this.processor[i].left})
-          if(this.aptos.length != 0){
-            this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
-            this.processor[i].total = this.aptos[0].total
-            this.processor[i].left = this.aptos[0].total
-            this.aptos.splice(0, 1)
+        if(this.processor[i].left == 0){ // processo finalizado
+          this.finalizados.push({id: this.processor[i].process, total: this.processor[i].total, state: 'pronto', left: this.processor[i].left})
+          if(counter < this.quantum){
+            if(this.aptos.length != 0){
+              this.processor[i].process = this.aptos[0].id // coloca próximo na fila de aptos para executar
+              this.processor[i].total = this.aptos[0].total
+              this.processor[i].left = this.aptos[0].left
+              this.aptos.splice(0, 1)
+            }else{
+              this.processor[i].process = null // deixa nulo se não tem processo na fila
+              this.processor[i].total = null
+              this.processor[i].left = null
+            }
           }else{
-            this.processor[i].process = null //coloca próximo na fila de aptos para executar
+            this.processor[i].process = null // libera o processador para receber próximos aptos
             this.processor[i].total = null
             this.processor[i].left = null
           }
         }else if(this.processor[i].left == null){
           if(this.aptos.length != 0){
-            this.processor[i].process = this.aptos[0].id //coloca próximo na fila de aptos para executar
+            this.processor[i].process = this.aptos[0].id // coloca próximo na fila de aptos para executar
             this.processor[i].total = this.aptos[0].total
-            this.processor[i].left = this.aptos[0].total
+            this.processor[i].left = this.aptos[0].left
             this.aptos.splice(0, 1)
           }
         }else{
           if(this.processor[i].left != null){
-            this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
+            if(counter < this.quantum){
+              this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
+            }else{
+              if(this.processor[i].left != 0){
+                this.aptos.push({id: this.processor[i].process, total: this.processor[i].total, state: 'pronto', left: this.processor[i].left}) // coloca processo de volta na fila de aptos
+              }
+              this.processor[i].process = null // libera o processador para receber próximos aptos
+              this.processor[i].total = null
+              this.processor[i].left = null
+            }
           }
         }
-      }       
+      } 
+      if(counter < this.quantum){
+        counter++ 
+      }else{
+        counter = 0
+      }   
+        
     },1000)
   }
 }

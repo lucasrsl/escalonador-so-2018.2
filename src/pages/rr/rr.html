@@ -8,130 +8,133 @@
 
 
 <ion-content padding>
-    <ion-grid>
-      <ion-row>
-        <ion-col class="col-processors" col-3  *ngFor="let p of processor">
-          <label >{{p.id}}</label>
-          <div class="processor-square">
-            <ion-grid>
-              <ion-row>
-                <ion-col col-6>
-                  <ion-icon name="planet"></ion-icon>
-                </ion-col>
-                <ion-col col-6>
-                  {{p.process}}
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col col-6>
-                  <ion-icon name="car"></ion-icon>
-                </ion-col>
-                <ion-col col-6>
-                  {{p.total}}
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col col-6>
-                  <ion-icon name="pizza"></ion-icon>
-                </ion-col>
-                <ion-col col-6>
-                  {{p.left}}
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <button ion-button block (click)="generateProcesses(1)">Adicionar processo</button><br>
-  
-    <h3>Aptos</h3>
-    <ion-list class="aptos-list">
-        <ion-item class="item-aptos">
-            <ion-grid>
-              <ion-row>
-                <ion-col col-3>
-                    <ion-icon name="planet"></ion-icon>
-                    Id
-                  </ion-col>
-                  <ion-col col-3>
-                    <ion-icon name="car"></ion-icon>
-                    Total
-                  </ion-col>
-                  <ion-col col-3>
-                    <ion-icon name="pizza"></ion-icon>
-                    Restante
-                  </ion-col>
-                  <ion-col col-3>
-                      <ion-icon name="cloud"></ion-icon>
-                    Estado
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-      <ion-item  *ngFor="let a of aptos" class="item-aptos">
-        <ion-grid>
-          <ion-row>
-            <ion-col col-3>
-                {{a.id}}
-              </ion-col>
-              <ion-col col-3>
-                {{a.total}}
-              </ion-col>
-              <ion-col col-3>
-                {{a.left}}
-              </ion-col>
-              <ion-col col-3>
-                {{a.state}}
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
-    </ion-list><br>
-  
-    <h3>Finalizados</h3>
-    <ion-list class="finalizados-list">
-      <ion-item class="item-finalizados">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="col-processors" col-4  *ngFor="let p of processor">
+        <div class="processor-square">
           <ion-grid>
             <ion-row>
-              <ion-col col-3>
-                  <ion-icon name="planet"></ion-icon>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="planet"></ion-icon> -->
+                Id
+              </ion-col>
+              <ion-col col-4>
+                {{p.process}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="car"></ion-icon> -->
+                Total
+              </ion-col>
+              <ion-col col-4>
+                {{p.total}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="pizza"></ion-icon> -->
+                Rest.
+              </ion-col>
+              <ion-col col-4>
+                {{p.left}}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <button ion-button block (click)="generateProcesses(1)">Adicionar processo</button><br>
+
+  <h3>Aptos</h3>
+  <ion-list class="aptos-list">
+      <ion-item class="item-aptos">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="planet"></ion-icon> -->
                   Id
                 </ion-col>
-                <ion-col col-3>
-                  <ion-icon name="car"></ion-icon>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="car"></ion-icon> -->
                   Total
                 </ion-col>
-                <ion-col col-3>
-                  <ion-icon name="pizza"></ion-icon>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="pizza"></ion-icon> -->
                   Restante
                 </ion-col>
-                <ion-col col-3>
-                    <ion-icon name="cloud"></ion-icon>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="cloud"></ion-icon> -->
                   Estado
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
-  
-      <ion-item  *ngFor="let f of finalizados" class="item-finalizados">
+    <ion-item  *ngFor="let a of aptos" class="item-aptos">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-3>
+              {{a.id}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.total}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.left}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.state}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list><br>
+
+  <h3>Finalizados</h3>
+  <ion-list class="finalizados-list">
+    <ion-item class="item-finalizados">
         <ion-grid>
           <ion-row>
-            <ion-col col-3>
-                {{f.id}}
+            <ion-col col-3 class="nomes-coluna">
+                <!-- <ion-icon name="planet"></ion-icon> -->
+                Id
               </ion-col>
-              <ion-col col-3>
-                {{f.total}}
+              <ion-col col-3 class="nomes-coluna">
+                <!-- <ion-icon name="car"></ion-icon> -->
+                Total
               </ion-col>
-              <ion-col col-3>
-                {{f.left}}
+              <ion-col col-3 class="nomes-coluna">
+                <!-- <ion-icon name="pizza"></ion-icon> -->
+                Restante
               </ion-col>
-              <ion-col col-3>
-                {{f.state}}
+              <ion-col col-3 class="nomes-coluna">
+                <!-- <ion-icon name="cloud"></ion-icon> -->
+                Estado
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
-    
-    </ion-list>
-  </ion-content>
+
+    <ion-item  *ngFor="let f of finalizados" class="item-finalizados">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-3>
+              {{f.id}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.total}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.left}}
+            </ion-col>
+            <ion-col col-3>
+              {{f.state}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  
+  </ion-list>
+</ion-content>
+  
