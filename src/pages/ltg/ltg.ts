@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the LtgPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -23,6 +17,9 @@ export class LtgPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) { 
     this.generateProcesses(navParams.get("processes"))
     this.generateProcessors(navParams.get("processors"))
+    if(navParams.get("processes") == 69){
+      alert("( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)")
+    }
     this.escalonar(navParams.get("processors"))
     
     
@@ -44,6 +41,7 @@ export class LtgPage {
       this.aptos.push({id: this.lastId, total: total, state: state, left: total, deadline: deadline})
       this.lastId++
     }
+    this.sortProcesses()
   }
 
   generateProcessors(processors){
@@ -59,8 +57,31 @@ export class LtgPage {
     }
   }
 
+  sortProcesses(){ // inserion sort
+    for (let i = 1; i < this.aptos.length; i++)
+    {
+        let key = this.aptos[i]
+        let j = i-1
+
+        while (j >= 0 && this.aptos[j].deadline > key.deadline)
+        {
+            this.aptos[j + 1] = this.aptos[j]
+            j = j - 1
+        }
+        this.aptos[j + 1] = key
+    }
+  }
+
   escalonar(processors:number){
     let intervalVar = setInterval(() => { // cria thread de 1 segundo
+      for (let j = 0; j < this.aptos.length; j++) {
+        if(this.aptos[j].deadline != 0){
+          this.aptos[j].deadline--
+        }else{
+          this.abortados.push({id: this.aptos[j].id, total: this.aptos[j].total, state: 'abortado', left: this.aptos[j].left, deadline: this.aptos[j].deadline})
+          this.aptos.splice(j, 1)
+        } 
+      }
       for (let i = 0; i < processors; i++) {
         if(this.processor[i].left == 0){ // processo finalizado
           this.finalizados.push({id: this.processor[i].process, total: this.processor[i].total, state: 'pronto', left: this.processor[i].left})
@@ -86,7 +107,8 @@ export class LtgPage {
             this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
           }
         }
-      }         
+      }    
+      this.sortProcesses()   
     },1000)
   }
 

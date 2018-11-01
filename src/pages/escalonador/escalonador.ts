@@ -8,7 +8,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'escalonador.html',
 })
 export class EscalonadorPage {
-  data = {x:"", y:"", z:"", w:""}
+  data = {x:"", y:"", z:"", w:"", m:"", t:""}
   visability: boolean = false
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -23,7 +23,9 @@ export class EscalonadorPage {
       this.navCtrl.push('RrPage', {
         processors: this.data.y,
         processes: this.data.z,
-        quantum: this.data.w
+        quantum: this.data.w,
+        manager: this.data.m,
+        totalMemory: this.data.t
       })
     }else if(this.data.x==='ltg'){
       this.navCtrl.push('LtgPage', {

@@ -10,6 +10,9 @@
 <ion-content padding>
   <ion-grid>
     <ion-row>
+      <h3>Processadores</h3><br>
+    </ion-row>
+    <ion-row>
       <ion-col class="col-processors" col-4  *ngFor="let p of processor">
         <div class="processor-square">
           <ion-grid>
@@ -38,6 +41,45 @@
               </ion-col>
               <ion-col col-4>
                 {{p.left}}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <h3>Blocos em uso</h3><br>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col class="col-blocks" col-4  *ngFor="let b of busyBlocks">
+        <div class="blocks-square">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="planet"></ion-icon> -->
+                Id
+              </ion-col>
+              <ion-col col-4>
+                {{b.id}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="car"></ion-icon> -->
+                Total
+              </ion-col>
+              <ion-col col-4>
+                {{b.total}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-8 class="nomes-coluna">
+                <!-- <ion-icon name="pizza"></ion-icon> -->
+                Usado
+              </ion-col>
+              <ion-col col-4>
+                {{b.used}}
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -135,6 +177,51 @@
       </ion-grid>
     </ion-item>
   
+  </ion-list><br>
+
+  <h3>Abortados</h3>
+  <ion-list class="list">
+      <ion-item class="item">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="planet"></ion-icon> -->
+                  Id
+                </ion-col>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="car"></ion-icon> -->
+                  Total
+                </ion-col>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="pizza"></ion-icon> -->
+                  Restante
+                </ion-col>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="cloud"></ion-icon> -->
+                  Deadline
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+    <ion-item  *ngFor="let a of abortados" class="item">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-3>
+              {{a.id}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.total}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.left}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.deadline}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
   </ion-list>
+
 </ion-content>
   

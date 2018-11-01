@@ -1,10 +1,23 @@
 page-rr {
+
+    .grid {
+        padding: 0px;
+    }
+    
     .processor-square{
         text-align: center;
         border: solid;
         border-color: black;
         border-radius: 8px;
     }
+
+    .blocks-square{
+        text-align: center;
+        border: solid;
+        border-color: gray;
+        border-radius: 8px;
+    }
+
     .processes-list{
         ion-col{
             font-size: 80%;

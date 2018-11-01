@@ -16,6 +16,9 @@ export class SjfPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) { 
     this.generateProcesses(navParams.get("processes"))
     this.generateProcessors(navParams.get("processors"))
+    if(navParams.get("processes") == 69){
+      alert("( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)")
+    }
     this.escalonar(navParams.get("processors"))
     
     
