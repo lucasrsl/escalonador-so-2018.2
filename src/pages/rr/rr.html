@@ -8,6 +8,7 @@
 
 
 <ion-content padding>
+    <button ion-button block (click)="iniciar()">Iniciar</button><br>
   <ion-grid>
     <ion-row>
       <h3>Processadores</h3><br>
@@ -108,7 +109,7 @@
                 </ion-col>
                 <ion-col col-3 class="nomes-coluna">
                   <!-- <ion-icon name="cloud"></ion-icon> -->
-                  Estado
+                  Tamanho
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -126,7 +127,7 @@
               {{a.left}}
             </ion-col>
             <ion-col col-3>
-              {{a.state}}
+              {{a.bytes}}
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -152,7 +153,7 @@
               </ion-col>
               <ion-col col-3 class="nomes-coluna">
                 <!-- <ion-icon name="cloud"></ion-icon> -->
-                Estado
+                Tamanho
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -171,7 +172,7 @@
               {{f.left}}
             </ion-col>
             <ion-col col-3>
-              {{f.state}}
+              {{f.bytes}}
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -184,17 +185,21 @@
       <ion-item class="item">
           <ion-grid>
             <ion-row>
-              <ion-col col-4 class="nomes-coluna">
+              <ion-col col-3 class="nomes-coluna">
                   <!-- <ion-icon name="planet"></ion-icon> -->
                   Id
                 </ion-col>
-                <ion-col col-4 class="nomes-coluna">
+                <ion-col col-3 class="nomes-coluna">
                   <!-- <ion-icon name="car"></ion-icon> -->
                   Total
                 </ion-col>
-                <ion-col col-4 class="nomes-coluna">
+                <ion-col col-3 class="nomes-coluna">
                   <!-- <ion-icon name="pizza"></ion-icon> -->
                   Restante
+                </ion-col>
+                <ion-col col-3 class="nomes-coluna">
+                  <!-- <ion-icon name="pizza"></ion-icon> -->
+                  Tamanho
                 </ion-col>
             </ion-row>
           </ion-grid>
@@ -202,14 +207,17 @@
     <ion-item  *ngFor="let a of abortados" class="item">
       <ion-grid>
         <ion-row>
-          <ion-col col-4>
+          <ion-col col-3>
               {{a.id}}
             </ion-col>
-            <ion-col col-4>
+            <ion-col col-3>
               {{a.total}}
             </ion-col>
-            <ion-col col-4>
+            <ion-col col-3>
               {{a.left}}
+            </ion-col>
+            <ion-col col-3>
+              {{a.bytes}}
             </ion-col>
         </ion-row>
       </ion-grid>

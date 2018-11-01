@@ -27,7 +27,6 @@ export class RrPage {
       alert("( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)")
     }
 
-    this.escalonarb(navParams.get("processors"))
     // if(this.manager == "bf") {
     //   this.escalonarb(navParams.get("processors"))
 
@@ -35,6 +34,10 @@ export class RrPage {
     //  // this.escalonarm(navParams.get("processors"))
     // }
     
+  }
+
+  iniciar() {
+    this.escalonarb(this.navParams.get("processors"))
   }
 
   generateRandomNumber(min, max){
