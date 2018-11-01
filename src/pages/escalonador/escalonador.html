@@ -26,13 +26,13 @@
                 <ion-option value="ltg">Least Time to Go</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="visability">
+          <!-- <ion-item *ngIf="visability">
             <ion-label  class="esc-label">Gerenciador de memória: </ion-label>
             <ion-select #Sg class="esc-select" name="gerenciador" interface="popover" [(ngModel)]="data.m">
               <ion-option value="bf">Best Fit</ion-option>
               <ion-option value="mf">Merge Fit</ion-option>
           </ion-select>
-          </ion-item>
+          </ion-item> -->
           <ion-item *ngIf="visability">
             <ion-label  class="esc-label">Quantum: </ion-label>
             <ion-input type="tel" #Qt name="quantum" placeholder="2 - 20" maxlength="2" [(ngModel)]="data.w"></ion-input>

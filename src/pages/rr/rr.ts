@@ -11,8 +11,7 @@ export class RrPage {
   finalizados: Array<{id: number, bytes: number, total: number, state: string, left: number}> = []
   abortados: Array<{id: number, bytes: number, total: number, state: string, left: number}> = []
   processor: Array<{id: number, process: number, bytes: number, total: number, left: number, state: string}> = []
-  busyBlocks: Array<{id: number, processId: number, total: number, used: number, next: number}> = []
-  freeBlocks: Array<{id: number, total: number}> = []
+  blocks: Array<{processId: number, total: number, used: number}> = []
   lastId: number = 0
   quantum: number = 0
   manager: string = ""
@@ -23,16 +22,18 @@ export class RrPage {
     this.generateProcesses(navParams.get("processes"))
     this.generateProcessors(navParams.get("processors"))
     this.quantum = navParams.get("quantum")
-    this.manager = navParams.get("manager")
+    // this.manager = navParams.get("manager")
     if(navParams.get("processes") == 69){
       alert("( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)")
     }
-    if(this.manager == "bf") {
-      this.escalonarb(navParams.get("processors"))
 
-    }else if(this.manager == "mf") {
-     // this.escalonarm(navParams.get("processors"))
-    }
+    this.escalonarb(navParams.get("processors"))
+    // if(this.manager == "bf") {
+    //   this.escalonarb(navParams.get("processors"))
+
+    // }else if(this.manager == "mf") {
+    //  // this.escalonarm(navParams.get("processors"))
+    // }
     
   }
 
@@ -55,31 +56,27 @@ export class RrPage {
   }
 
   generateProcessors(processors){
-    let id = 0
     for (let i = 0; i < processors; i++) {
-      if(this.aptos.length > id){
+      if(this.aptos.length >= i){
         if(this.totalMemory >= this.aptos[0].bytes){  // coloca próximo processo da lista no processador
           this.totalMemory = this.totalMemory - this.aptos[0].bytes
-          this.processor.push({id: id, process: this.aptos[0].id, bytes: this.aptos[0].bytes, total: this.aptos[0].total, left: this.aptos[0].total, state: 'executando'})
-          this.busyBlocks.push({id: id, processId: this.aptos[0].id, total: this.aptos[0].bytes, used: this.aptos[0].bytes, next: 0})
-          if(i > 0) {
-            this.busyBlocks[i - 1].next = i
-          }
+          this.processor.push({id: i, process: this.aptos[0].id, bytes: this.aptos[0].bytes, total: this.aptos[0].total, left: this.aptos[0].total, state: 'executando'})
+          this.blocks.push({processId: this.aptos[0].id, total: this.aptos[0].bytes, used: this.aptos[0].bytes})
         }else{
           this.abortados.push({id: this.aptos[0].id, bytes: this.aptos[0].bytes, total: this.aptos[0].total, left: this.aptos[0].total, state: 'abortado'})
+          this.processor.push({id: i, process: null, bytes: null, total: null, left: null, state: null}) // cria processador sem processo
         }
         this.aptos.splice(0, 1) // processo retirado da lista de aptos 
       }else{
-        this.processor.push({id: id, process: null, bytes: null, total: null, left: null, state: null}) // cria processador sem processo
+        this.processor.push({id: i, process: null, bytes: null, total: null, left: null, state: null}) // cria processador sem processo
       }
-      id++
     }
   }
 
   escalonarb(processors:number){
     let counter = 0
     let intervalVar = setInterval(() => { // cria thread de 1 segundo
-      for (let i = 0; i < processors - 1; i++) {
+      for (let i = 0; i < processors; i++) {
         if(this.processor[i].left == 0){ // processo finalizado
           this.processoFinalizado(this.processor[i])
           if(counter < this.quantum){
@@ -87,20 +84,18 @@ export class RrPage {
           }else{
             this.liberaProcessador(i)
           }
-        }else if(this.processor[i].left == null){
+        }else if(this.processor[i].left == null){ // processador vazio
           if(this.aptos.length != 0){
-            this.proximoDaFila(i)
+            this.adicionarProcesso(i)
           }
-        }else{
-          if(this.processor[i].left != null){
-            if(counter < this.quantum){
-              this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
-            }else{
-              if(this.processor[i].left != 0){
-                this.aptos.push({id: this.processor[i].process, bytes: this.processor[i].bytes, total: this.processor[i].total, state: 'pronto', left: this.processor[i].left}) // coloca processo de volta na fila de aptos
-              }
-              this.liberaProcessador(i)
+        }else{ // processo não finalizado
+          if(counter < this.quantum){ // quantum ainda não foi atingido
+            this.processor[i].left = this.processor[i].left - 1 // conta um segundo no tempo restante dos processos em execução
+          }else{ //quantum atingido
+            if(this.processor[i].left != 0){ 
+              this.aptos.push({id: this.processor[i].process, bytes: this.processor[i].bytes, total: this.processor[i].total, state: 'pronto', left: this.processor[i].left}) // coloca processo de volta na fila de aptos
             }
+            this.liberaProcessador(i)
           }
         }
       } 
@@ -112,14 +107,64 @@ export class RrPage {
         
     },1000)
   }
+  
+  adicionarProcesso(id) {
+    let bestfit = 0
+    let bestfitId = -1
+    if(this.aptos.length != 0){
+      if(this.aptos[0].bytes <= this.totalMemory){ // verifica se tem espaço na memória total para processar
+        let existe = false
+        for (let i = 0; i < this.blocks.length; i++) {
+          if(this.blocks[i].processId == this.aptos[0].id){
+            existe = true
+            bestfitId = i
+          }
+          
+        }
+        if(existe == true) {
+          this.blocks[bestfitId].processId = this.aptos[0].id
+          this.blocks[bestfitId].used = this.aptos[0].bytes
+
+        }else {
+          this.blocks.push({processId: this.aptos[0].id, total: this.aptos[0].bytes, used: this.aptos[0].bytes})
+          this.totalMemory = this.totalMemory - this.aptos[0].bytes
+
+        }
+        this.proximoDaFila(id)
+      }else{
+        for (let j = 0; j < this.blocks.length; j++) {
+          if(this.blocks[j].processId == -1) {
+            if(this.blocks[j].total >= this.aptos[0].bytes){ // verifica se algum bloco tem espaço para alocar processo
+              if(this.aptos[0].bytes >= bestfit){
+                bestfitId = j
+                bestfit = this.blocks[j].total
+              }
+            }
+          }
+          if(this.blocks[j].processId == this.aptos[0].id){
+            bestfitId = j
+          }
+        }
+        if(bestfitId == -1) {
+          this.abortados.push({id: this.aptos[0].id, bytes: this.aptos[0].bytes, total: this.aptos[0].total, left: this.aptos[0].total, state: 'abortado'})
+          this.aptos.splice(0, 1)
+        }else {
+          this.blocks[bestfitId].processId = this.aptos[0].id
+          this.blocks[bestfitId].used = this.aptos[0].bytes
+          this.proximoDaFila(id)
+        }
+      }
+    }else{
+      this.liberaProcessador(id)
+    }
+  }
 
   processoFinalizado(processor) {
     this.finalizados.push({id: processor.process, bytes: processor.bytes, total: processor.total, state: 'pronto', left: processor.left})
-    for (let j = 0; j < this.busyBlocks.length; j++) {
-      if(this.busyBlocks[j].processId == processor.process){
-        this.totalMemory = this.totalMemory + this.busyBlocks[j].total
-        this.freeBlocks.push({id: this.busyBlocks[j].id, total: this.busyBlocks[j].total})
-        this.busyBlocks.splice(j ,1)
+    for (let j = 0; j < this.blocks.length; j++) {
+      if(this.blocks[j].processId == processor.process){
+        this.blocks[j].used = 0
+        this.blocks[j].processId = -1
       }
     }
   }
@@ -139,30 +184,7 @@ export class RrPage {
     this.aptos.splice(0, 1)
   }
 
-  adicionarProcesso(id) {
-    let bestfit = 0
-    if(this.aptos.length != 0){
-      if(this.aptos[0].bytes <= this.totalMemory){ // verifica se tem espaço na memória total para processar
-        for (let j = 0; j < this.freeBlocks.length; j++) {
-          if(this.freeBlocks[j].total <= this.aptos[0].bytes){ // verifica se algum bloco tem espaço para alocar processo
-            if(bestfit > this.aptos[0].bytes){
-              bestfit = j
-            }
-          }
-        }
-        this.busyBlocks.push({id: this.freeBlocks[bestfit].id, processId: this.aptos[0].id, total: this.freeBlocks[bestfit].total, used: this.aptos[0].bytes, next: this.freeBlocks[0].id})
-        this.freeBlocks.splice(bestfit, 1)
-        
-        this.proximoDaFila(id)
-        this.totalMemory = this.totalMemory - this.aptos[0].bytes
-      }else{
-        this.abortados.push({id: this.aptos[0].id, bytes: this.aptos[0].bytes, total: this.aptos[0].total, left: this.aptos[0].total, state: 'abortado'})
-        this.aptos.splice(0, 1)
-      }
-    }else{
-      this.liberaProcessador(id)
-    }
-  }
+
 
   // escalonarm(processors:number){
   //   let counter = 0
